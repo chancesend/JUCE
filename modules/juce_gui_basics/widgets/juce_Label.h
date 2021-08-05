@@ -339,15 +339,18 @@ protected:
     /** @internal */
     void callChangeListeners();
 
-private:
-    //==============================================================================
+    virtual bool updateFromTextEditorContents (TextEditor&);
+protected:
     Value textValue;
     String lastTextValue;
+    WeakReference<Component> ownerComponent;
+
+private:
+    //==============================================================================
     Font font { 15.0f };
     Justification justification = Justification::centredLeft;
     std::unique_ptr<TextEditor> editor;
     ListenerList<Listener> listeners;
-    WeakReference<Component> ownerComponent;
     BorderSize<int> border { 1, 5, 1, 5 };
     float minimumHorizontalScale = 0;
     TextInputTarget::VirtualKeyboardType keyboardType = TextInputTarget::textKeyboard;
@@ -355,8 +358,6 @@ private:
     bool editDoubleClick = false;
     bool lossOfFocusDiscardsChanges = false;
     bool leftOfOwnerComp = false;
-
-    bool updateFromTextEditorContents (TextEditor&);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Label)
 };
