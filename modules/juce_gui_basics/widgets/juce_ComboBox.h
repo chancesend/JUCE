@@ -197,7 +197,7 @@ public:
                                 be sent to listeners if the value changes
         @see getSelectedId, setSelectedItemIndex, setText
     */
-    void setSelectedId (int newItemId,
+    virtual void setSelectedId (int newItemId,
                         NotificationType notification = sendNotificationAsync);
 
     //==============================================================================
@@ -426,6 +426,14 @@ public:
     JUCE_DEPRECATED (void setSelectedItemIndex (int, bool));
     JUCE_DEPRECATED (void setText (const String&, bool));
 
+protected:
+    // EUROPA - moved these toe allow Resubmitable combo boxes
+    Value currentId;
+    int lastCurrentId = 0;
+    std::unique_ptr<Label> label;
+    PopupMenu::Item* getItemForId (int) const noexcept;
+    void sendChange (NotificationType);
+
 private:
     //==============================================================================
     enum EditableState
@@ -436,20 +444,15 @@ private:
     };
 
     PopupMenu currentMenu;
-    Value currentId;
-    int lastCurrentId = 0;
     bool isButtonDown = false, menuActive = false, scrollWheelEnabled = false;
     float mouseWheelAccumulator = 0;
     ListenerList<Listener> listeners;
-    std::unique_ptr<Label> label;
     String textWhenNothingSelected, noChoicesMessage;
     EditableState labelEditableState = editableUnknown;
 
-    PopupMenu::Item* getItemForId (int) const noexcept;
     PopupMenu::Item* getItemForIndex (int) const noexcept;
     bool selectIfEnabled (int index);
     bool nudgeSelectedItem (int delta);
-    void sendChange (NotificationType);
     void showPopupIfNotActive();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ComboBox)
